@@ -102,3 +102,19 @@
 (defn makestring
   [m]
   (-> m mp/get-columns stringer twist stringme combine-rowstrings))
+;; attempting a new ver
+
+(defn process [maxvec row]
+(loop [mv maxvec r row nm [] nr []]
+
+(let [s (str (first r))]
+(if (seq (rest r))
+(recur (rest mv) (rest r) (conj nm (max (first mv) (count s))) (conj nr s))
+[nm nr]))))
+
+(defn chomp [prev-row-map newrow]
+(let [results (process (:maxvec prev-row-map) newrow)]
+{:maxvec (first results) :rows (conj (:rows prev-row-map) (rest results))}))
+
+(defn makestring [rowvec]
+(reduce chomp {:maxvec (repeat 0) :prev-row-map []} rowvec))
