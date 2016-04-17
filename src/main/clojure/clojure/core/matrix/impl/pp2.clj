@@ -15,6 +15,7 @@
            [clojure.lang IPersistentVector]))
 
 (def rows [[1 20 300 4] [50 6000 77 8]])
+(def ^String NL (System/getProperty "line.separator"))
 
 (defn- format-num [x] (format "%.3f" (double x)))
 (defn- default-formatter [x]
@@ -64,7 +65,24 @@
 (defn pad-row
   [row clen-vec]
   "takes a row of strings and a vector of column lengths and returns row as a padded string ending with newline"
+  (let [sb (StringBuilder.)]
+    (.append sb \[)
+    (.append sb
+      (let [x (StringBuilder.)]
+        (loop [elem & rest] row [esize & erest] clen-vec]
+          (.append x (append-elem elem esize))
+          (.append x " ")
+          (recur rest erest x)
+        )
+        (.toString x)
+      )
+    )
+      (.append sb \])
+      (.toString sb)
+    )
   )
+
+(def testpad [["1.000" "50.000"] [7 8]])
 
 (defn pad-out [colmap]
   (let [clen (:max colmap) col (:column colmap)]
