@@ -13,15 +13,22 @@
 
 (defn string-helper
   "helper func to use for reduce in stringer"
-  [the-map the-value]
-  (let [sv (str the-value)]
+  [formatter the-map the-value]
+  (let [sv (formatter the-value)]
   {:max (max (:max the-map) (count sv))
    :column (conj (:column the-map) sv)}))
 
 (defn stringer
   "convert single column to string + find max, all in one pass."
-  [vec-of-cols]
+  ([vec-of-cols]
   (map
     #(reduce
-      string-helper {:max 0 :column []} %)
+      (partial string-helper default-formatter)
+      {:max 0 :column []} %)
     vec-of-cols))
+    ([vec-of-cols formatter]
+    (map
+      #(reduce
+        (partial string-helper formatter)
+        {:max 0 :column []} %)
+      vec-of-cols)))
