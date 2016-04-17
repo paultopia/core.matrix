@@ -23,34 +23,6 @@
     (format-num x)
     (str x)))
 
-(defn string-helper
-  "helper func to use for reduce in stringer"
-  [formatter the-map the-value]
-  (let [sv (formatter the-value)]
-  {:max (max (:max the-map) (count sv))
-   :column (conj (:column the-map) sv)}))
-
-(defn stringer
-  "convert single column to string + find max, all in one pass."
-  ([vec-of-cols]
-  (map
-    #(reduce
-      (partial string-helper default-formatter)
-      {:max 0 :column []} %)
-    vec-of-cols))
-    ([vec-of-cols formatter]
-    (map
-      #(reduce
-        (partial string-helper formatter)
-        {:max 0 :column []} %)
-      vec-of-cols)))
-
-(defn twist
-  "take map output of stringer, rotate to rows + vector of col lengths"
-  [colmaps]
-  {:clen (mapv :max colmaps)
-    :rows (mp/transpose (mapv :column colmaps))})
-
 (defn- append-elem
   "Appends an element, right-padding up to a given column length."
   [^String elem ^long clen]
@@ -96,12 +68,12 @@
 
 (defn stringme [twisted]
   "twisted map --> vector of vectors-as-strings"
-  (let [cv (:clen twisted) rw (:rows twisted)]
+  (let [cv (:maxvec twisted) rw (:rows twisted)]
     (mapv #(pad-row % cv) rw)))
 
-(defn makestring
+(defn makeprint
   [m]
-  (-> m mp/get-columns stringer twist stringme combine-rowstrings))
+  (-> m makestring stringme combine-rowstrings))
 ;; attempting a new ver
 
 (defn process [maxvec row]
