@@ -106,7 +106,6 @@
 
 (defn process [maxvec row]
 (loop [mv maxvec r row nm [] nr []]
-
 (let [s (str (first r))]
 (if (seq (rest r))
 (recur (rest mv) (rest r) (conj nm (max (first mv) (count s))) (conj nr s))
@@ -114,7 +113,8 @@
 
 (defn chomp [prev-row-map newrow]
 (let [results (process (:maxvec prev-row-map) newrow)]
-{:maxvec (first results) :rows (conj (:rows prev-row-map) (rest results))}))
-
+{:maxvec (first results) :rows (into [] (conj (:rows prev-row-map)  (rest results)))}))
 (defn makestring [rowvec]
-(reduce chomp {:maxvec (repeat 0) :prev-row-map []} rowvec))
+(reduce chomp {:maxvec (repeat 0) :rows []} rowvec))
+
+(def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])
