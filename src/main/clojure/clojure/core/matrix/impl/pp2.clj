@@ -89,6 +89,7 @@
       (if (seq (rest vtr))
         (do
           (.append x NL)
+          (.append x " ")
           (recur (rest vtr)))
         (do (.append x \])
         (.toString x)))))))
@@ -101,4 +102,3 @@
 (defn makestring
   [m]
   (-> m mp/get-columns stringer twist stringme combine-rowstrings))
-  
