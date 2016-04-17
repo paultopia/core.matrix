@@ -62,25 +62,23 @@
     (.append sb elem)
     (.toString sb)))
 
+
+
+
 (defn pad-row
   [row clen-vec]
   "takes a row of strings and a vector of column lengths and returns row as a padded string ending with newline"
-  (let [sb (StringBuilder.)]
-    (.append sb \[)
-    (.append sb
-      (let [x (StringBuilder.)]
-        (loop [elem & rest] row [esize & erest] clen-vec]
-          (.append x (append-elem elem esize))
-          (.append x " ")
-          (recur rest erest x)
-        )
-        (.toString x)
-      )
-    )
-      (.append sb \])
-      (.toString sb)
-    )
-  )
+  (let [x (StringBuilder.)]
+    (do (.append x \[)
+      (loop [elems row
+             sizes clen-vec]
+        (.append x (append-elem (first elems) (first sizes)))
+        (if (seq (rest sizes))
+          (do
+            (.append x " ")
+            (recur (rest elems) (rest sizes)))
+          (do (.append x \])
+              (.toString x)))))))
 
 (def testpad [["1.000" "50.000"] [7 8]])
 
