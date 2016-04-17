@@ -86,7 +86,7 @@
     (.append x \[)
     (loop [vtr v]
       (.append x (first vtr))
-      (if (seq rest vtr)
+      (if (seq (rest vtr))
         (do
           (.append x NL)
           (recur (rest vtr)))
@@ -98,8 +98,7 @@
   (let [cv (:clen twisted) rw (:rows twisted)]
     (mapv #(pad-row % cv) rw)))
 
-(defn boogie)
-
-
-(defn brute-force [m]
-  (-> m mp/get-columns stringer matpad mp/transpose))
+(defn makestring
+  [m]
+  (-> m mp/get-columns stringer twist stringme combine-rowstrings))
+  
