@@ -62,14 +62,12 @@
     (.append sb elem)
     (.toString sb)))
 
-
-
-
 (defn pad-row
   [row clen-vec]
   "takes a row of strings and a vector of column lengths and returns row as a padded string ending with newline"
   (let [x (StringBuilder.)]
-    (do (.append x \[)
+    (do
+      (.append x \[)
       (loop [elems row
              sizes clen-vec]
         (.append x (append-elem (first elems) (first sizes)))
@@ -80,14 +78,27 @@
           (do (.append x \])
               (.toString x)))))))
 
-(def testpad [["1.000" "50.000"] [7 8]])
+(defn combine-rowstrings
+  [v]
+  "vector of rowstrings --> one big string"
+  (let [x (StringBuilder.)]
+  (do
+    (.append x \[)
+    (loop [vtr v]
+      (.append x (first vtr))
+      (if (seq rest vtr)
+        (do
+          (.append x NL)
+          (recur (rest vtr)))
+        (do (.append x \])
+        (.toString x)))))))
 
-(defn pad-out [colmap]
-  (let [clen (:max colmap) col (:column colmap)]
-  (mapv #(append-elem % clen) col)))
+(defn stringme [twisted]
+  "twisted map --> vector of vectors-as-strings"
+  (let [cv (:clen twisted) rw (:rows twisted)]
+    (mapv #(pad-row % cv) rw)))
 
-(defn matpad [vec-of-maps]
-  (mapv pad-out vec-of-maps))
+(defn boogie)
 
 
 (defn brute-force [m]
