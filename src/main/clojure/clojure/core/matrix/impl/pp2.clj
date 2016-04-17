@@ -113,7 +113,7 @@
 
 (defn chomp [prev-row-map newrow]
 (let [results (process (:maxvec prev-row-map) newrow)]
-{:maxvec (first results) :rows (into [] (conj (vec (:rows prev-row-map)) (apply vec (rest results))))}))
+{:maxvec (first results) :rows (conj (:rows prev-row-map) (apply vec (rest results)))}))
 (defn makestring [rowvec]
 (reduce chomp {:maxvec (repeat 0) :rows []} rowvec))
 
