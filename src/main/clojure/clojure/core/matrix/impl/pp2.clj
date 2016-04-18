@@ -71,9 +71,6 @@
   (let [cv (:maxvec twisted) rw (:rows twisted)]
     (mapv #(pad-row % cv) rw)))
 
-(defn makeprint
-  [m]
-  (-> m makestring stringme combine-rowstrings))
 ;; attempting a new ver
 
 (defn process [maxvec row]
@@ -89,4 +86,14 @@
 (defn makestring [rowvec]
 (reduce chomp {:maxvec (repeat 0) :rows []} rowvec))
 
+(defn makeprint
+  [m]
+  (-> m makestring stringme combine-rowstrings))
+
+
 (def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])
+
+;; TODO:
+;; make to handle formatter
+;; make to handle 0 and 1-dim input (just str it)
+;; make process return a map or something s
