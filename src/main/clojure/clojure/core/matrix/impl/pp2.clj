@@ -38,10 +38,8 @@
 
 (defn pad-row
   "takes a row of strings and a vector of column lengths and returns row as a padded string ending with newline"
-    ([row clen-vec]
-     (pad-row row clen-vec nil))
-    ([row clen-vec prefix]
-  (let [x (StringBuilder.) pre (or prefix "")]
+    [row clen-vec]
+  (let [x (StringBuilder.)]
     (do
       (.append x \[)
       (loop [elems row
@@ -49,15 +47,15 @@
         (.append x (append-elem (first elems) (first sizes)))
         (if (seq (rest sizes))
           (do
-            (.append x (str prefix " "))
+            (.append x " ")
             (recur (rest elems) (rest sizes)))
           (do (.append x \])
-              (.toString x))))))))
+              (.toString x)))))))
 
 (defn combine-rowstrings
-  [v]
+  [v prefix]
   "vector of rowstrings --> one big string"
-  (let [x (StringBuilder.)]
+  (let [x (StringBuilder.) pre (or prefix "")]
   (do
     (.append x \[)
     (loop [vtr v]
@@ -65,15 +63,16 @@
       (if (seq (rest vtr))
         (do
           (.append x NL)
+          (.append x pre)
           (.append x " ")
           (recur (rest vtr)))
         (do (.append x \])
         (.toString x)))))))
 
-(defn stringme [twisted prefix]
+(defn stringme [twisted]
   "twisted map --> vector of vectors-as-strings"
   (let [cv (:maxvec twisted) rw (:rows twisted)]
-    (mapv #(pad-row % cv prefix) rw)))
+    (mapv #(pad-row % cv) rw)))
 
 ;; attempting a new ver
 
@@ -95,7 +94,7 @@
   ([m]
    (makeprint m nil))
   ([m prefix]
-  (combine-rowstrings (stringme (makestring m) prefix))))
+  (combine-rowstrings (stringme (makestring m)) prefix)))
 
 
 (def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])
@@ -105,5 +104,5 @@
 ;; make to handle 0 and 1-dim input (just str it)
 ;; add optimizations from original (warn on reflection, type hints, unchecked numbers)
 
-;; prefix goes from main -- stringme -- padrow (in)
+;; prefix goes from main -- combine-rowstrings
 ;; formatter goes from main -- makestring -- chomp -- process
