@@ -78,11 +78,12 @@
 (let [s (str (first r))]
 (if (seq (rest r))
 (recur (rest mv) (rest r) (conj nm (max (first mv) (count s))) (conj nr s))
-[nm nr]))))
+{:mv nm :r nr}))))
 
 (defn chomp [prev-row-map newrow]
 (let [results (process (:maxvec prev-row-map) newrow)]
-{:maxvec (first results) :rows (conj (:rows prev-row-map) (apply vec (next results)))}))
+{:maxvec (:mv results) :rows (conj (:rows prev-row-map) (:r results))}))
+
 (defn makestring [rowvec]
 (reduce chomp {:maxvec (repeat 0) :rows []} rowvec))
 
@@ -96,4 +97,4 @@
 ;; TODO:
 ;; make to handle formatter
 ;; make to handle 0 and 1-dim input (just str it)
-;; make process return a map or something s
+;; add optimizations from original (warn on reflection, type hints, unchecked numbers)
