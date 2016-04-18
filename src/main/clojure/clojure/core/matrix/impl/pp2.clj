@@ -100,9 +100,8 @@
 (def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])
 
 ;; TODO:
-;; make to handle formatter and prefix (to each row)
+;; make to handle formatter 
 ;; make to handle 0 and 1-dim input (just str it)
 ;; add optimizations from original (warn on reflection, type hints, unchecked numbers)
 
-;; prefix goes from main -- combine-rowstrings
 ;; formatter goes from main -- makestring -- chomp -- process
