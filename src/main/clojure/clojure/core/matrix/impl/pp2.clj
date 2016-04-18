@@ -14,7 +14,9 @@
   (:import [java.lang StringBuilder]
            [clojure.lang IPersistentVector]))
 
-(def rows [[1 20 300 4] [50 6000 77 8]])
+(set! *warn-on-reflection* true)
+(set! *unchecked-math* true)
+
 (def ^String NL (System/getProperty "line.separator"))
 
 (defn- format-num [x] (format "%.3f" (double x)))
@@ -35,9 +37,11 @@
     (.toString sb)))
 
 (defn pad-row
-  [row clen-vec]
   "takes a row of strings and a vector of column lengths and returns row as a padded string ending with newline"
-  (let [x (StringBuilder.)]
+    ([row clen-vec]
+     (pad-row row clen-vec nil))
+    ([row clen-vec prefix]
+  (let [x (StringBuilder.) pre (or prefix "")]
     (do
       (.append x \[)
       (loop [elems row
@@ -45,10 +49,10 @@
         (.append x (append-elem (first elems) (first sizes)))
         (if (seq (rest sizes))
           (do
-            (.append x " ")
+            (.append x (str prefix " "))
             (recur (rest elems) (rest sizes)))
           (do (.append x \])
-              (.toString x)))))))
+              (.toString x))))))))
 
 (defn combine-rowstrings
   [v]
@@ -66,15 +70,15 @@
         (do (.append x \])
         (.toString x)))))))
 
-(defn stringme [twisted]
+(defn stringme [twisted prefix]
   "twisted map --> vector of vectors-as-strings"
   (let [cv (:maxvec twisted) rw (:rows twisted)]
-    (mapv #(pad-row % cv) rw)))
+    (mapv #(pad-row % cv prefix) rw)))
 
 ;; attempting a new ver
 
 (defn process [maxvec row]
-(loop [mv maxvec r row nm [] nr []]
+  (loop [mv maxvec r row nm [] nr []]
 (let [s (str (first r))]
 (if (seq (rest r))
 (recur (rest mv) (rest r) (conj nm (max (first mv) (count s))) (conj nr s))
@@ -88,13 +92,18 @@
 (reduce chomp {:maxvec (repeat 0) :rows []} rowvec))
 
 (defn makeprint
-  [m]
-  (-> m makestring stringme combine-rowstrings))
+  ([m]
+   (makeprint m nil))
+  ([m prefix]
+  (combine-rowstrings (stringme (makestring m) prefix))))
 
 
 (def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])
 
 ;; TODO:
-;; make to handle formatter
+;; make to handle formatter and prefix (to each row)
 ;; make to handle 0 and 1-dim input (just str it)
 ;; add optimizations from original (warn on reflection, type hints, unchecked numbers)
+
+;; prefix goes from main -- stringme -- padrow (in)
+;; formatter goes from main -- makestring -- chomp -- process
