@@ -74,14 +74,14 @@
   (let [cv (:maxvec twisted) rw (:rows twisted)]
     (mapv #(pad-row % cv) rw)))
 
-;; attempting a new ver
 
 (defn process [maxvec row]
   (loop [mv maxvec r row nm [] nr []]
 (let [s (str (first r))]
 (if (seq (rest r))
 (recur (rest mv) (rest r) (conj nm (max (first mv) (count s))) (conj nr s))
-{:mv nm :r nr}))))
+{:mv (conj nm (max (first mv) (count s))) :r (conj nr s)})
+)))
 
 (defn chomp [prev-row-map newrow]
 (let [results (process (:maxvec prev-row-map) newrow)]
