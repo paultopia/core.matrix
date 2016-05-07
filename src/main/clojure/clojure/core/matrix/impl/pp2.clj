@@ -107,10 +107,12 @@
 (def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])
 
 ;; TODO:
-;; make to handle formatter 
+;; cleanup unnecessary imports 
+;; document a little bit
 ;; make to handle 0 and 1-dim input (just str it)
 ;; add optimizations from original (type hints)
+;; benchmark
 
-;; formatter goes from main -- makestring -- chomp -- process-row
+
 
 
