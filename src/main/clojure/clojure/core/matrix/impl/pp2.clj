@@ -77,30 +77,33 @@
     (mapv #(pad-row % cv) rw)))
 
 
-(defn process-row [maxvec row]
-  (loop [mv maxvec 
-         r row 
-         col-max-lengths [] 
-         string-row []]
-    (let [s (str (first r))
-          col-max-lengths (conj col-max-lengths (max (first mv) (count s))) 
-          string-row (conj string-row s)]
-      (if (seq (rest r))
-        (recur (rest mv) (rest r) col-max-lengths string-row)
-        {:mv col-max-lengths :r string-row}))))
+(defn process-row 
+  ([maxvec row]
+   (process-row maxvec row default-formatter))
+  ([maxvec row formatter]
+    (loop [mv maxvec 
+           r row 
+           col-max-lengths [] 
+           string-row []]
+      (let [s (formatter (first r))
+            col-max-lengths (conj col-max-lengths (max (first mv) (count s))) 
+            string-row (conj string-row s)]
+        (if (seq (rest r))
+          (recur (rest mv) (rest r) col-max-lengths string-row)
+          {:mv col-max-lengths :r string-row})))))
 
-(defn chomp [prev-row-map newrow]
-  (let [results (process-row (:maxvec prev-row-map) newrow)]
+(defn chomp [formatter prev-row-map newrow]
+  (let [results (process-row (:maxvec prev-row-map) newrow formatter)]
     {:maxvec (:mv results) :rows (conj (:rows prev-row-map) (:r results))}))
 
-(defn makestring [rowvec]
-(reduce chomp {:maxvec (repeat 0) :rows []} rowvec))
+(defn makestring [rowvec formatter]
+(reduce (partial chomp formatter) {:maxvec (repeat 0) :rows []} rowvec))
 
 (defn makeprint
   ([m]
-   (makeprint m nil))
-  ([m prefix]
-    (combine-rowstrings (stringme (makestring m)) prefix)))
+   (makeprint m {:prefix nil :formatter nil}))
+  ([m {:keys [prefix formatter]}]
+    (combine-rowstrings (stringme (makestring m (or formatter default-formatter))) prefix)))
 
 
 (def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])

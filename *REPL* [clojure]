@@ -1,0 +1,97 @@
+nREPL server started on port 49883 on host 127.0.0.1 - nrepl://127.0.0.1:49883
+REPL-y 0.3.7, nREPL 0.2.7
+Clojure 1.8.0
+Java HotSpot(TM) 64-Bit Server VM 1.8.0_45-b14
+    Docs: (doc function-name-here)
+          (find-doc "part-of-name-here")
+  Source: (source function-name-here)
+ Javadoc: (javadoc java-object-or-class-here)
+    Exit: Control+D or (exit) or (quit)
+ Results: Stored in vars *1, *2, *3, an exception in *e
+
+user=> (use clojure.core.matrix.impl.pp2)
+(use clojure.core.matrix.impl.pp2)
+
+user=>        java.lang.ClassNotFoundException: clojure.core.matrix.impl.pp2
+clojure.lang.Compiler$CompilerException: java.lang.ClassNotFoundException: clojure.core.matrix.impl.pp2, compiling:(/private/var/folders/y7/2chz_r6x6kl60752vfv7y_tr0000gn/T/form-init5905995643555800004.clj:1:1)
+(use 'clojure.core.matrix.impl.pp2)
+(use 'clojure.core.matrix.impl.pp2)
+nil
+user=> rows2
+rows2
+[[1 20 300 4] [50 6000 77 8] [90 100 110 122]]
+user=> (makeprint rows2)
+(makeprint rows2)
+"[[ 1   20 300   4]\n [50 6000  77   8]\n [90  100 110 122]]"
+user=> (println (makeprint rows2))
+(println (makeprint rows2))
+[[ 1   20 300   4]
+ [50 6000  77   8]
+ [90  100 110 122]]
+nil
+user=> (println (makeprint rows2 *))
+(println (makeprint rows2 *))
+[[ 1   20 300   4]
+clojure.core$_STAR_@2673405a [50 6000  77   8]
+clojure.core$_STAR_@2673405a [90  100 110 122]]
+nil
+user=> (println (makeprint rows2 "*"))
+(println (makeprint rows2 "*"))
+[[ 1   20 300   4]
+* [50 6000  77   8]
+* [90  100 110 122]]
+nil
+user=> (println (makeprint rows2 "lengthy :test"))
+(println (makeprint rows2 "lengthy :test"))
+[[ 1   20 300   4]
+lengthy :test [50 6000  77   8]
+lengthy :test [90  100 110 122]]
+nil
+user=> (use 'clojure.core.matrix.impl.pp2 :reload)
+(use 'clojure.core.matrix.impl.pp2 :reload)
+nil
+user=> (println (makeprint rows2 "*"))
+(println (makeprint rows2 "*"))
+[*[ 1   20 300   4]
+* *[50 6000  77   8]
+* *[90  100 110 122]]
+nil
+user=> (use 'clojure.core.matrix.impl.pp2 :reload)
+(use 'clojure.core.matrix.impl.pp2 :reload)
+nil
+user=> (println (makeprint rows2 "*"))
+(println (makeprint rows2 "*"))
+[*[ 1   20 300   4]
+* [50 6000  77   8]
+* [90  100 110 122]]
+nil
+user=> (use 'clojure.core.matrix.impl.pp2 :reload)
+(use 'clojure.core.matrix.impl.pp2 :reload)
+
+             java.lang.RuntimeException: Unmatched delimiter: )
+clojure.lang.Compiler$CompilerException: java.lang.RuntimeException: Unmatched delimiter: ), compiling:(clojure/core/matrix/impl/pp2.clj:87:42)
+user=> (use 'clojure.core.matrix.impl.pp2 :reload)
+(use 'clojure.core.matrix.impl.pp2 :reload)
+nil
+user=> (println (makeprint rows2))
+(println (makeprint rows2))
+[[ 1   20 300   4]
+ [50 6000  77   8]
+ [90  100 110 122]]
+nil
+user=> (use 'clojure.core.matrix.impl.pp2 :reload)
+(use 'clojure.core.matrix.impl.pp2 :reload)
+nil
+user=> (println (makeprint rows2))
+(println (makeprint rows2))
+[[ 1.000   20.000 300.000   4.000]
+ [50.000 6000.000  77.000   8.000]
+ [90.000  100.000 110.000 122.000]]
+nil
+user=> (println (makeprint rows2 {:prefix "*"}))
+(println (makeprint rows2 {:prefix "*"}))
+[*[ 1.000   20.000 300.000   4.000]
+* [50.000 6000.000  77.000   8.000]
+* [90.000  100.000 110.000 122.000]]
+nil
+user=> (println (makeprint rows2 {:prefix "*" :formatter str}))
