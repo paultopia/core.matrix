@@ -78,9 +78,7 @@
 
 
 (defn process-row 
-  ([maxvec row]
-   (process-row maxvec row default-formatter))
-  ([maxvec row formatter]
+  [maxvec row formatter]
     (loop [mv maxvec 
            r row 
            col-max-lengths [] 
@@ -90,7 +88,7 @@
             string-row (conj string-row s)]
         (if (seq (rest r))
           (recur (rest mv) (rest r) col-max-lengths string-row)
-          {:mv col-max-lengths :r string-row})))))
+          {:mv col-max-lengths :r string-row}))))
 
 (defn chomp [formatter prev-row-map newrow]
   (let [results (process-row (:maxvec prev-row-map) newrow formatter)]
