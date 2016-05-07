@@ -20,6 +20,7 @@
 (def ^String NL (System/getProperty "line.separator"))
 
 (defn- format-num [x] (format "%.3f" (double x)))
+
 (defn- default-formatter [x]
   (if (number? x)
     (format-num x)
@@ -58,6 +59,7 @@
   (let [x (StringBuilder.) pre (or prefix "")]
   (do
     (.append x \[)
+    (.append x pre)
     (loop [vtr v]
       (.append x (first vtr))
       (if (seq (rest vtr))
@@ -102,6 +104,9 @@
 ;; TODO:
 ;; make to handle formatter 
 ;; make to handle 0 and 1-dim input (just str it)
-;; add optimizations from original (warn on reflection, type hints, unchecked numbers)
+;; add optimizations from original (type hints)
 
 ;; formatter goes from main -- makestring -- chomp -- process
+
+;; prefix doesn't cover first line, need to fix that. 
+
