@@ -59,7 +59,7 @@
   (let [x (StringBuilder.) pre (or prefix "")]
   (do
     (.append x \[)
-    (.append x pre)
+    (.append x pre)  ;; get prefix on 1st line. I think this is a bugfix from original.
     (loop [vtr v]
       (.append x (first vtr))
       (if (seq (rest vtr))
@@ -77,17 +77,21 @@
     (mapv #(pad-row % cv) rw)))
 
 
-(defn process [maxvec row]
-  (loop [mv maxvec r row nm [] nr []]
-(let [s (str (first r))]
-(if (seq (rest r))
-(recur (rest mv) (rest r) (conj nm (max (first mv) (count s))) (conj nr s))
-{:mv (conj nm (max (first mv) (count s))) :r (conj nr s)})
-)))
+(defn process-row [maxvec row]
+  (loop [mv maxvec 
+         r row 
+         col-max-lengths [] 
+         string-row []]
+    (let [s (str (first r))
+          col-max-lengths (conj col-max-lengths (max (first mv) (count s))) 
+          string-row (conj string-row s)]
+      (if (seq (rest r))
+        (recur (rest mv) (rest r) col-max-lengths string-row)
+        {:mv col-max-lengths :r string-row}))))
 
 (defn chomp [prev-row-map newrow]
-(let [results (process (:maxvec prev-row-map) newrow)]
-{:maxvec (:mv results) :rows (conj (:rows prev-row-map) (:r results))}))
+  (let [results (process-row (:maxvec prev-row-map) newrow)]
+    {:maxvec (:mv results) :rows (conj (:rows prev-row-map) (:r results))}))
 
 (defn makestring [rowvec]
 (reduce chomp {:maxvec (repeat 0) :rows []} rowvec))
@@ -96,7 +100,7 @@
   ([m]
    (makeprint m nil))
   ([m prefix]
-  (combine-rowstrings (stringme (makestring m)) prefix)))
+    (combine-rowstrings (stringme (makestring m)) prefix)))
 
 
 (def rows2 [[1 20 300 4] [50 6000 77 8] [90 100 110 122]])
@@ -106,7 +110,6 @@
 ;; make to handle 0 and 1-dim input (just str it)
 ;; add optimizations from original (type hints)
 
-;; formatter goes from main -- makestring -- chomp -- process
+;; formatter goes from main -- makestring -- chomp -- process-row
 
-;; prefix doesn't cover first line, need to fix that. 
 
